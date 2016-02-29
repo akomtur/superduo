@@ -98,13 +98,13 @@ public class PagerFragment extends Fragment
             int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
             int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
             if (julianDay == currentJulianDay) {
-                return context.getString(R.string.today);
+                return context.getString(R.string.pager_tab_today);
             } else if ( julianDay == currentJulianDay +1 ) {
-                return context.getString(R.string.tomorrow);
+                return context.getString(R.string.pager_tab_tomorrow);
             }
              else if ( julianDay == currentJulianDay -1)
             {
-                return context.getString(R.string.yesterday);
+                return context.getString(R.string.pager_tab_yesterday);
             }
             else
             {

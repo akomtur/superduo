@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "barqsoft.footballscores"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -17,10 +17,10 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "footballApiKey", '""'
+            buildConfigField "String", "footballApiKey", ''
         }
         release {
-            buildConfigField "String", "footballApiKey", '""'
+            buildConfigField "String", "footballApiKey", ''
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
