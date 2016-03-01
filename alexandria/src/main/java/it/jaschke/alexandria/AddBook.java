@@ -1,7 +1,6 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -174,27 +172,54 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             return;
         }
 
-        String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        ((TextView) rootView.findViewById(R.id.bookTitle)).setText(bookTitle);
+        fillTitle(data);
+        fillSubtitle(data);
+        fillAuthors(data);
+        fillImage(data);
+        fillCategories(data);
 
-        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        ((TextView) rootView.findViewById(R.id.bookSubTitle)).setText(bookSubTitle);
+        rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+    }
 
-        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
+    private void fillCategories(Cursor data) {
+        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        if (categories != null) {
+            ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+        }
+    }
+
+    private void fillImage(Cursor data) {
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if(Patterns.WEB_URL.matcher(imgUrl).matches()){
             new DownloadImage((ImageView) rootView.findViewById(R.id.bookCover)).execute(imgUrl);
             rootView.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
         }
+    }
 
-        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-        ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
+    private void fillTitle(Cursor data) {
+        String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+        if (bookTitle != null) {
+            ((TextView) rootView.findViewById(R.id.bookTitle)).setText(bookTitle);
+        }
+    }
 
-        rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
-        rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+    private void fillSubtitle(Cursor data) {
+        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        if(bookSubTitle != null) {
+            ((TextView) rootView.findViewById(R.id.bookSubTitle)).setText(bookSubTitle);
+        }
+    }
+
+    private void fillAuthors(Cursor data) {
+        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
+        if(authors != null) {
+            String[] authorsArr = authors.split(",");
+            ((TextView) rootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+            ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
+        } else {
+            ((TextView)rootView.findViewById(R.id.authors)).setText("");
+        }
     }
 
     @Override
