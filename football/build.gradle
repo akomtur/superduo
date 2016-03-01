@@ -17,10 +17,10 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "footballApiKey", ''
+            buildConfigField "String", "footballApiKey", '""'
         }
         release {
-            buildConfigField "String", "footballApiKey", ''
+            buildConfigField "String", "footballApiKey", '""'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

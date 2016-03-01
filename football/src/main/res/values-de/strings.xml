@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="group_stage_text">Gruppenphase</string>
+    <string name="first_knockout_round">Achtelfinale</string>
+    <string name="quarter_final">Viertelfinale</string>
+    <string name="semi_final">Halbfinale</string>
+    <string name="final_text">Finale</string>
+
+
     <string name="app_name">Fußballergebnisse</string>
     <string name="action_settings">Einstellungen</string>
     <string name="about">Über</string>
