@@ -16,4 +16,5 @@
     <string name="pager_tab_today">Heute</string>
     <string name="pager_tab_yesterday">Gestern</string>
     <string name="pager_tab_tomorrow">Morgen</string>
+    <string name="unknown_league">Liga konnte nicht ermittelt werden</string>
 </resources>
