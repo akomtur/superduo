@@ -32,10 +32,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      */
     private CharSequence title;
     public static boolean IS_TABLET = false;
-    private BroadcastReceiver messageReciever;
+    private BroadcastReceiver messageReceiver;
 
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+
+    private boolean isDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             setContentView(R.layout.activity_main);
         }
 
-        messageReciever = new MessageReciever();
+        messageReceiver = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever,filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver,filter);
 
         navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -92,9 +94,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(title);
+        }
     }
 
 
@@ -117,18 +121,21 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
+        switch(id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case android.R.id.home:
+                if(!isTablet() && isDetail) {
+                    onBackPressed();
+                }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReciever);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
         super.onDestroy();
     }
 
@@ -144,6 +151,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if(findViewById(R.id.right_container) != null){
             id = R.id.right_container;
         }
+        isDetail = true;
         getSupportFragmentManager().beginTransaction()
                 .replace(id, fragment)
                 .addToBackStack("Book Detail")
@@ -151,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     }
 
-    private class MessageReciever extends BroadcastReceiver {
+    private class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getStringExtra(MESSAGE_KEY)!=null){
