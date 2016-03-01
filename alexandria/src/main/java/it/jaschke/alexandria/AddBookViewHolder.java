@@ -13,11 +13,11 @@ import it.jaschke.alexandria.services.DownloadImage;
  * Created by kaubisch on 01.03.16.
  */
 public class AddBookViewHolder {
-    private final TextView titleView;
-    private final TextView subTitleView;
-    private final TextView categoriesView;
-    private final TextView authorsView;
-    private final ImageView imageView;
+    public final TextView titleView;
+    public final TextView subTitleView;
+    public final TextView categoriesView;
+    public final TextView authorsView;
+    public final ImageView imageView;
 
     public AddBookViewHolder(final View rootView) {
         titleView = (TextView) rootView.findViewById(R.id.bookTitle);

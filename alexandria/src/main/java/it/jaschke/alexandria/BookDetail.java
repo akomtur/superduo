@@ -3,6 +3,7 @@ package it.jaschke.alexandria;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,7 +30,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     private final int LOADER_ID = 10;
     private View rootView;
     private String ean;
-    private String bookTitle;
+    private CharSequence bookTitle;
     private ShareActionProvider shareActionProvider;
 
     public BookDetail(){
@@ -62,9 +63,18 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+
         return rootView;
     }
 
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getCharSequence("bookTitle") != null) {
+            bookTitle = savedInstanceState.getCharSequence("bookTitle");
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -72,6 +82,13 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         MenuItem menuItem = menu.findItem(R.id.action_share);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        addShareMessageToProvider();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence("bookTitle", bookTitle);
     }
 
     @Override
@@ -96,11 +113,19 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         vh.fillViewWithData(data);
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)+bookTitle);
-        shareActionProvider.setShareIntent(shareIntent);
+        bookTitle = vh.titleView.getText();
+
+        addShareMessageToProvider();
+    }
+
+    private void addShareMessageToProvider() {
+        if(shareActionProvider != null && bookTitle != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)+bookTitle);
+            shareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @Override
